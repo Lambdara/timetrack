@@ -1,0 +1,73 @@
+#!/bin/bash
+
+datadir=$HOME/.timetrack
+tmpdir=/tmp/$(whoami)-timetrack-running
+
+function init {
+    if [[ -d $datadir ]]; then
+        echo "Already initialized"
+        exit 1
+    fi
+
+    mkdir $datadir
+}
+
+function now {
+    echo "$(date +%s)"
+}
+
+function start {
+    now=$(now)
+    dir=$datadir/$1
+    filename=$dir/$now
+    
+    mkdir -p $dir
+    mkdir -p $tmpdir
+
+    echo $now > $filename
+    tmpfile=$tmpdir/$(cat /dev/urandom | tr -cd 'a-z0-9' | head -c 32)
+    ln -s $filename $tmpfile
+}
+
+function stop {
+    now=$(now)
+
+    for file in $tmpdir/*; do
+        echo $now >> $file
+        rm $file
+    done
+}
+
+case "$1" in
+    "init")
+        init ${@:2}
+        ;;
+    "start")
+        start ${@:2}
+        ;;
+    "stop")
+        stop ${@:2}
+        ;;
+    "tree")
+        tree $datadir
+        ;;
+    "git")
+        echo "TODO: git"
+        ;;
+    "summarize")
+        echo "TODO: summarize"
+        # Example usage:
+        #  summarize work/meetings
+        # It will then go through all files in work/meetings (recursively if
+        # there are dirs in it), add the time and output this human-readable.
+        # Not sure how should be outputted, but like one of the following:
+        #  18h15m3s
+        #  18 hours, 15 minutes, 3 seconds
+        # Nice to have would be that it also gives the date and time of the
+        # first timestamp, and that of the last timestamp.
+        ;;
+    *)
+        echo "Command not recognized"
+        exit 1
+        ;;
+esac
