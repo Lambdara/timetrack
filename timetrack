@@ -54,6 +54,23 @@ function stop {
     done
 }
 
+function summarize {
+    total=0
+    for file in $(find $datadir/$1 -type f); do
+        line_amount=$(wc -l < $file)
+        if [[ "$line_amount" == "2" ]]; then
+            readarray file_content < $file
+            total=$((total+${file_content[1]}-${file_content[0]}))
+        fi
+    done
+
+    hours=$((total/3600))
+    minutes=$(((total%3600)/60))
+    seconds=$((total%60))
+
+    printf '%d hours, %d minutes, %d seconds\n' $hours $minutes $seconds
+}
+
 case "$1" in
     "init")
         init ${@:2}
@@ -71,16 +88,7 @@ case "$1" in
         echo "TODO: git"
         ;;
     "summarize")
-        echo "TODO: summarize"
-        # Example usage:
-        #  summarize work/meetings
-        # It will then go through all files in work/meetings (recursively if
-        # there are dirs in it), add the time and output this human-readable.
-        # Not sure how should be outputted, but like one of the following:
-        #  18h15m3s
-        #  18 hours, 15 minutes, 3 seconds
-        # Nice to have would be that it also gives the date and time of the
-        # first timestamp, and that of the last timestamp.
+        summarize ${@:2}
         ;;
     *)
         echo "Command not recognized"
