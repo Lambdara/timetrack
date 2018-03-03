@@ -71,6 +71,12 @@ function summarize {
     printf '%d hours, %d minutes, %d seconds\n' $hours $minutes $seconds
 }
 
+if [[ "$#" -lt 1 ]]; then
+    echo "Timetrack history"
+    tree $datadir | tail -n +2
+    exit
+fi
+
 case "$1" in
     "init")
         init ${@:2}
@@ -80,9 +86,6 @@ case "$1" in
         ;;
     "stop")
         stop ${@:2}
-        ;;
-    "tree")
-        tree $datadir
         ;;
     "git")
         echo "TODO: git"
