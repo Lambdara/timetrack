@@ -71,6 +71,14 @@ function summarize {
     printf '%d hours, %d minutes, %d seconds\n' $hours $minutes $seconds
 }
 
+function status {
+    for file in $tmpdir/*; do
+        file=$(readlink $file)
+        file=${file#$datadir/}
+        echo "Tracking $(dirname $file) since $(basename $file)"
+    done
+}
+
 if [[ "$#" -lt 1 ]]; then
     echo "Timetrack history"
     tree $datadir | tail -n +2
@@ -86,6 +94,9 @@ case "$1" in
         ;;
     "stop")
         stop ${@:2}
+        ;;
+    "status")
+        status ${@:2}
         ;;
     "git")
         echo "TODO: git"
