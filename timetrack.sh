@@ -36,7 +36,7 @@ function start {
     now=$(now)
     dir=$datadir/$1
     filename=$dir/$now
-    
+
     mkdir -p $dir
     mkdir -p $tmpdir
 
