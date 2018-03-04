@@ -89,7 +89,7 @@ function summarize {
 }
 
 function status {
-    for file in $(find $tmpdir/ -type f); do
+    for file in $(find $tmpdir/ -type l); do
         file=$(readlink $file)
         file=${file#$datadir/}
         filename=$(basename $file)
