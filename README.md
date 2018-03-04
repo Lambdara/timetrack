@@ -1,6 +1,6 @@
 # Timetrack
 
-Timetrack is (a prototype, currently in development, of) timetracking software that tries to follow the Unix philosophy.
+Timetrack is timetracking software that tries to follow the Unix philosophy.
 
 The main goal of this program is to allow you to quickly and with little effort accomplish the following:
 - Start tracking your time
