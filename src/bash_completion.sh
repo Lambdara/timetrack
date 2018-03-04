@@ -15,7 +15,7 @@ _complete_track()
                 "start"|"summarize")
                     local var
                     dir=$HOME/.timetrack/
-                    opts=$(find $dir -mindepth 1 -type d | cut -c$((${#dir}+1))-)
+                    opts=$(find $dir -mindepth 1 -type d -not -path "$dir.git" -not -path "$dir.git/*" | cut -c$((${#dir}+1))-)
                     ;;
             esac
             ;;
