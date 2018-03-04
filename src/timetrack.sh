@@ -75,7 +75,8 @@ function status {
     for file in $tmpdir/*; do
         file=$(readlink $file)
         file=${file#$datadir/}
-        echo "Tracking $(dirname $file) since $(basename $file)"
+        filename=$(basename $file)
+        echo "Tracking $(dirname $file) since $(date -d @$filename +'%Y-%m-%d %H:%M:%S')"
     done
 }
 
