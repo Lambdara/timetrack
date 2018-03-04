@@ -32,6 +32,14 @@ function now {
     echo "$(date +%s)"
 }
 
+function git_initialized {
+    if [[ -d "$datadir/.git" ]]; then
+        true
+    else
+        false
+    fi
+}
+
 function start {
     now=$(now)
     dir=$datadir/$1
@@ -43,6 +51,11 @@ function start {
     echo $now > $filename
     tmpfile=$tmpdir/$(cat /dev/urandom | tr -cd 'a-z0-9' | head -c 32)
     ln -s $filename $tmpfile
+
+    if [[ git_initialized ]]; then
+        git -C $datadir add $filename
+        git -C $datadir commit -m "Start tracking $1"
+    fi
 }
 
 function stop {
@@ -52,6 +65,10 @@ function stop {
         echo $now >> $file
         rm $file
     done
+
+    if git_initialized; then
+        git -C $datadir commit -am "Stop tracking"
+    fi
 }
 
 function summarize {
@@ -80,6 +97,16 @@ function status {
     done
 }
 
+function run_git {
+    if [[ "$1" == "init" ]]; then
+        git -C $datadir init
+        git -C $datadir add $datadir
+        git -C $datadir commit -m 'Initialize Timetrack history'
+    else
+        git -C $datadir ${@:1}
+    fi
+}
+
 if [[ "$#" -lt 1 ]]; then
     echo "Timetrack history"
     tree $datadir | tail -n +2
@@ -100,7 +127,7 @@ case "$1" in
         status ${@:2}
         ;;
     "git")
-        echo "TODO: git"
+        run_git ${@:2}
         ;;
     "summarize")
         summarize ${@:2}
