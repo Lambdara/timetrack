@@ -73,7 +73,7 @@ function stop {
 
 function summarize {
     total=0
-    for file in $(find $datadir/$1 -type f); do
+    for file in $(find $datadir/$1 -type f -not -path "$datadir/.git/*"); do
         line_amount=$(wc -l < $file)
         if [[ "$line_amount" == "2" ]]; then
             readarray file_content < $file
