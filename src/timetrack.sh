@@ -88,6 +88,30 @@ function summarize {
     printf '%d hours, %d minutes, %d seconds\n' $hours $minutes $seconds
 }
 
+function list {
+    for file in $(find $datadir/$1 -type f -not -path "$datadir/.git/*"); do
+        line_amount=$(wc -l < $file)
+        if [[ "$line_amount" == "2" ]]; then
+            readarray file_content < $file
+            time_spent=$((total+${file_content[1]}-${file_content[0]}))
+
+            hours=$((time_spent/3600))
+            minutes=$(((time_spent%3600)/60))
+            seconds=$((time_spent%60))
+
+            file=${file#$datadir/}
+
+            printf 'Tracked %s for %d:%d:%d hours, from %s to %s\n' \
+                   $(dirname $file) \
+                   $hours \
+                   $minutes \
+                   $seconds \
+                   "$(date -d @${file_content[0]} +'%Y-%m-%d %H:%M:%S')" \
+                   "$(date -d @${file_content[1]} +'%Y-%m-%d %H:%M:%S')"
+        fi
+    done
+}
+
 function status {
     if [[ -d $tmpdir ]]; then
         for file in $(find $tmpdir/ -type l); do
@@ -133,6 +157,9 @@ case "$1" in
         ;;
     "summarize")
         summarize ${@:2}
+        ;;
+    "list")
+        list ${@:2}
         ;;
     *)
         echo "Command not recognized"
