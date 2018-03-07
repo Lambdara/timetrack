@@ -89,12 +89,14 @@ function summarize {
 }
 
 function status {
-    for file in $(find $tmpdir/ -type l); do
-        file=$(readlink $file)
-        file=${file#$datadir/}
-        filename=$(basename $file)
-        echo "Tracking $(dirname $file) since $(date -d @$filename +'%Y-%m-%d %H:%M:%S')"
-    done
+    if [[ -d $tmpdir ]]; then
+        for file in $(find $tmpdir/ -type l); do
+            file=$(readlink $file)
+            file=${file#$datadir/}
+            filename=$(basename $file)
+            echo "Tracking $(dirname $file) since $(date -d @$filename +'%Y-%m-%d %H:%M:%S')"
+        done
+    fi
 }
 
 function run_git {
