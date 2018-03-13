@@ -133,6 +133,15 @@ function run_git {
     fi
 }
 
+function remove {
+    rm -r $datadir/$1
+
+    if git_initialized; then
+        git -C $datadir add $1
+        git -C $datadir commit -m "Remove $1"
+    fi
+}
+
 if [[ "$#" -lt 1 ]]; then
     echo "Timetrack history"
     tree $datadir | tail -n +2
@@ -160,6 +169,9 @@ case "$1" in
         ;;
     "list")
         list ${@:2}
+        ;;
+    "remove")
+        remove ${@:2}
         ;;
     *)
         echo "Command not recognized"
