@@ -142,6 +142,23 @@ function remove {
     fi
 }
 
+function insert {
+    now=$(now)
+    dir=$datadir/$1
+    filename=$dir/$now
+
+    mkdir -p $dir
+    mkdir -p $tmpdir
+
+    echo $2 > $filename
+    echo $3 >> $filename
+
+    if [[ git_initialized ]]; then
+        git -C $datadir add $filename
+        git -C $datadir commit -m "Insert $1"
+    fi
+}
+
 if [[ "$#" -lt 1 ]]; then
     echo "Timetrack history"
     tree $datadir | tail -n +2
@@ -172,6 +189,9 @@ case "$1" in
         ;;
     "remove")
         remove ${@:2}
+        ;;
+    "insert")
+        insert ${@:2}
         ;;
     *)
         echo "Command not recognized"

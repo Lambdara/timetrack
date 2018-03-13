@@ -32,11 +32,11 @@ _complete_track()
 
     case "${#COMP_WORDS[@]}" in
         2)
-            opts="init start stop git summarize status list remove"
+            opts="init start stop git summarize status list remove insert"
             ;;
         3)
             case "$prev" in
-                "start"|"summarize"|"list")
+                "start"|"summarize"|"list"|"insert")
                     timetrack_files
                     ;;
                 "remove")
