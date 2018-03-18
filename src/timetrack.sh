@@ -20,6 +20,11 @@ datadir=$HOME/.timetrack
 tmpdir=/tmp/$(whoami)-timetrack-running
 
 function init {
+    if (( $# != 0 )); then
+        echo "Usage: track init" 1>&2
+        exit 1;
+    fi
+
     if [[ -d $datadir ]]; then
         echo "Already initialized"
         exit 1
@@ -41,6 +46,11 @@ function git_initialized {
 }
 
 function start {
+    if (( $# != 1 )); then
+        echo "Usage: track start <label>" 1>&2
+        exit 1
+    fi
+
     now=$(now)
     dir=$datadir/$1
     filename=$dir/$now
@@ -59,6 +69,11 @@ function start {
 }
 
 function stop {
+    if (( $# != 0 )); then
+        echo "Usage: track stop" 1>&2
+        exit 1
+    fi
+
     now=$(now)
 
     for file in $tmpdir/*; do
@@ -72,6 +87,11 @@ function stop {
 }
 
 function summarize {
+    if (( $# > 1 )); then
+        echo "Usage: track summarize [label]" 1>&2
+        exit 1
+    fi
+
     total=0
     for file in $(find $datadir/$1 -type f -not -path "$datadir/.git/*"); do
         line_amount=$(wc -l < $file)
@@ -89,6 +109,11 @@ function summarize {
 }
 
 function list {
+    if (( $# > 1 )); then
+        echo "Usage: track list [label]" 1>&2
+        exit 1
+    fi
+
     for file in $(find $datadir/$1 -type f -not -path "$datadir/.git/*"); do
         line_amount=$(wc -l < $file)
         if [[ "$line_amount" == "2" ]]; then
@@ -113,6 +138,11 @@ function list {
 }
 
 function status {
+    if (( $# != 0 )); then
+        echo "Usage: track status" 1>&2
+        exit 1
+    fi
+
     if [[ -d $tmpdir ]]; then
         for file in $(find $tmpdir/ -type l); do
             file=$(readlink $file)
@@ -134,6 +164,11 @@ function run_git {
 }
 
 function remove {
+    if (( $# != 1 )); then
+        echo "Usage: track remove <label>" 1>&2
+        exit 1
+    fi
+
     rm -r $datadir/$1
 
     if git_initialized; then
@@ -143,6 +178,11 @@ function remove {
 }
 
 function insert {
+    if (( $# != 3 )); then
+        echo "Usage: track insert <label> <start_time> <end_time>" 1>&2
+        exit 1
+    fi
+
     now=$(now)
     dir=$datadir/$1
     filename=$dir/$now
