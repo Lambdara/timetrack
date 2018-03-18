@@ -182,6 +182,18 @@ function insert {
         echo "Usage: track insert <label> <start_time> <end_time>" 1>&2
         exit 1
     fi
+    if ! [[ $2 =~ ^[0-9]+$ ]]; then
+        echo "Argument start_time has to be a nonnegative integer (unix time)"
+        exit 1
+    fi
+    if ! [[ $3 =~ ^[0-9]+$ ]]; then
+        echo "Argument end_time has to be a nonnegative integer (unix time)"
+        exit 1
+    fi
+    if ! (( $2 <= $3 )); then
+        echo "The start_time should be no earlier than the end_time"
+        exit 1
+    fi
 
     now=$(now)
     dir=$datadir/$1
