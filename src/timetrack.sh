@@ -211,6 +211,46 @@ function insert {
     fi
 }
 
+function print_help {
+    echo 'Timetrack - Timetracking software following the Unix philosophy
+
+Timetrack  Copyright (C) 2018  Uwila
+This program is licensed under the GNU General Public License, version 3.
+You should have received a copy of this license along with this program. If not,
+see <https://www.gnu.org/licenses/>.
+This program comes with ABSOLUTELY NO WARRANTY. See the GNU General Public
+License for more details.
+
+Usage:
+
+Format of these commands:
+  the command [an optional argument] <a required argument>
+
+Initialize a storage for timetrack data:
+  track init
+
+Start or stop tracking an event, or check whether an event is being tracked:
+  track start <label>
+  track stop
+  track status
+
+Use Git for version control:
+  track git [git_commands]
+
+Summarize or list the data about an event:
+  track summarize [label]
+  track list [label]
+
+Remove data:
+  track remove <label>
+
+Insert data ad hoc:
+  track insert <label> <start_time> <end_time>
+
+Print this message:
+  track help'
+}
+
 if [[ "$#" -lt 1 ]]; then
     echo "Timetrack history"
     tree $datadir | tail -n +2
@@ -244,6 +284,9 @@ case "$1" in
         ;;
     "insert")
         insert ${@:2}
+        ;;
+    "help")
+        print_help
         ;;
     *)
         echo "Command not recognized"
