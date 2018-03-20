@@ -223,6 +223,15 @@ License for more details.
 
 Usage:
 
+Data is stored in a tree structure. The labels you use thus have a specific
+interpretation: labela/labelb/labelc means event labelc within the category
+labelb, which is itself in category labela. Commands that take a label as an
+argument will often go though all subcategories of the specified label as well,
+for example when deleting labela/labelb, this implies you delete
+lbaela/labelb/lbaelc as well.
+
+Now the commands will be listed with a short explanation.
+
 Format of these commands:
   the command [an optional argument] <a required argument>
 
