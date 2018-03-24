@@ -26,7 +26,7 @@ function init {
     fi
 
     if [[ -d $datadir ]]; then
-        echo "Already initialized"
+        echo "Already initialized" 1>&2
         exit 1
     fi
 
@@ -183,15 +183,15 @@ function insert {
         exit 1
     fi
     if ! [[ $2 =~ ^[0-9]+$ ]]; then
-        echo "Argument start_time has to be a nonnegative integer (unix time)"
+        echo "Argument start_time has to be a nonnegative integer (unix time)" 1>&2
         exit 1
     fi
     if ! [[ $3 =~ ^[0-9]+$ ]]; then
-        echo "Argument end_time has to be a nonnegative integer (unix time)"
+        echo "Argument end_time has to be a nonnegative integer (unix time)" 1>&2
         exit 1
     fi
     if ! (( $2 <= $3 )); then
-        echo "The start_time should be no earlier than the end_time"
+        echo "The start_time should be no earlier than the end_time" 1>&2
         exit 1
     fi
 
