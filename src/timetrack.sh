@@ -211,6 +211,11 @@ function insert {
     fi
 }
 
+function print_tree {
+    echo "Timetrack tree:"
+    tree $datadir $@ | tail -n +2
+}
+
 function print_help {
     echo 'Timetrack - Timetracking software following the Unix philosophy
 
@@ -261,12 +266,14 @@ Print this message:
 }
 
 if [[ "$#" -lt 1 ]]; then
-    echo "Timetrack history"
-    tree $datadir | tail -n +2
+    print_tree
     exit
 fi
 
 case "$1" in
+    "tree")
+        print_tree ${@:2}
+        ;;
     "init")
         init ${@:2}
         ;;
